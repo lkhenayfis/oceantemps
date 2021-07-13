@@ -8,14 +8,14 @@
 \usage{
 leFROMdir(dir)
 
-leFROMurl(janela, url, outdir)
+leFROMurl(data, url, outdir)
 }
 \arguments{
 \item{dir}{diretorio onde se encontram os arquivos .nc no formato ersst.v5.AAAAMM.nc, onde
 \emph{AAAA} indica o ano e \emph{MM} o mes referente as informacoes}
 
-\item{janela}{vetor de dois elementos no formato "AAAAMM" indicando a janela de tempo dos dados
-que devem ser baixados}
+\item{data}{string no formato AAAAMM indicando ano-mes do dado a ser baixado. Pode ser um
+vetor de dois elementos indicando a janela de tempo dos dados que devem ser baixados}
 
 \item{url}{url de onde baixar os dados. Se nao forncida, sera usado
 \url{https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/netcdf/}}
