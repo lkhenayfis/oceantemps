@@ -87,7 +87,9 @@ leFROMurl <- function(janela, url, outdir) {
     arqsdown <- file.path(url, arqs)
     arqsdest <- file.path(outdir, arqs)
 
-    for(i in seq(arqs)) download.file(arqsdown[i], arqsdest[i])
+    mode <- ifelse(Sys.info()["sysname"] == "Windows", "wb", "w")
+
+    for(i in seq(arqs)) download.file(arqsdown[i], arqsdest[i], mode = mode)
 
     leFROMdir(outdir)
 }
