@@ -1,0 +1,25 @@
+Package: oceantemps
+Title: Interacao com dados de temperatura na superficie dos oceanos
+Version: 0.1
+Authors@R: 
+    person(given = "Lucas",
+           family = "Khenayfis",
+           role = c("aut", "cre"),
+           email = "lucaskhenayfis@gmail.com")
+Description: Este pacote contem os dados de temperatura na superficie dos oceanos ja importados e
+    preparados para uso, bem como funcoes para faze-lo com novos conjuntos de informacoes brutas.
+    Alem disso possui facilidades para extrair informacoes de regioes especificas como series 
+    temporais, plots e animacoes temporais da evolucao das temperaturas ao longo de um determinado
+    periodo.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports:
+    ncdf4 (>= 1.17),
+    data.table (>= 1.14.0),
+    ggplot2 (>= 3.3.2),
+    maps (>= 3.3.0)
+Depends: 
+    R (>= 2.10)
