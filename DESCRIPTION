@@ -1,6 +1,6 @@
 Package: oceantemps
 Title: Interacao com dados de temperatura na superficie dos oceanos
-Version: 0.1
+Version: 0.1.5
 Authors@R: 
     person(given = "Lucas",
            family = "Khenayfis",
