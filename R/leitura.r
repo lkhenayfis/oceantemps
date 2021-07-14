@@ -28,7 +28,10 @@
 #' 
 #' # LEITURA DA MESMA JANELA DE DADOS A PARTIR DA URL PADRAO -------------
 #' 
-#' leFROMurl(janela = c("202001", "202002"))
+#' leFROMurl(data = "202001:202002")
+#' 
+#' # leitura de datas nao sequenciais
+#' leFROMurl(data = c("202001", "202005", "202011"))
 #' 
 #' @return data.table contendo informacoes formatadas para uso
 #' \describe{
