@@ -4,16 +4,19 @@
 #' 
 #' Permite extrair de dado de temperaturas da superficie uma determinada regiao numa janela de tempo
 #' 
-#' Todos os tres parametros \code{lon}, \code{lat} e \code{data} podem ser fornecidos como um 
-#' escalar ou vetor. No primeiro caso sera feito matching exato do valor fornecido; no segundo, 
-#' quando sao informados vetores, sera buscado no dado registros entre o primeiro e segundo valores
-#' do vetor com intervalos fechados.
+#' Os parametros \code{lon} e \code{lat}podem ser fornecidos como um escalar ou vetor. No primeiro
+#' caso sera feito matching exato do valor fornecido; no segundo, quando sao informados vetores,
+#' sera buscado no dado registros entre o primeiro e ultimo valores do vetor, inclusive.
+#' 
+#' No caso das datas, algo similar pode ser feito fornecendo uma string no formato "AAAAMM:AAAAMM", 
+#' indicando a janela de tempo desejada. Nao e permitida a extracao de datas nao sequenciais, dado 
+#' que assim ja nao configura mais uma serie temporal.
 #' 
 #' @param dado o dado do qual extrair serie. Deve ter formato igual ao retornado por 
 #'     \code{\link{leFROMdir}} ou \code{\link{leFROMurl}}
 #' @param lon longitude da regiao desejada. Ver Detalhes
 #' @param lat latitude da regiao desejada. Ver Detalhes
-#' @param data data das observacoes desejada no formato AAAAMM. Ver Detalhes
+#' @param data data das observacoes desejadas no formato AAAAMM. Ver Detalhes
 #' @param FUN funcao utilizada para agregacao de observacoes por data no caso de \code{lon} ou 
 #'     \code{lat} serem vetores. Por padrao se usa a media
 #' @param ... parametros extras passados a \code{FUN}. \bold{Nao deve ser passado na.rm por aqui,
@@ -29,6 +32,9 @@
 #' # Extracao da faixa lon = [38, 40], lat = [-44, -40] ao longo de 2020, combinando por media (padrao)
 #' extraiserie(datexemplo, c(38, 40), c(-44, -40))
 #' 
+#' # Mesma regiao mas apenas na janela 202001:202006
+#' extraiserie(datexemplo, c(38, 40), c(-44, -40), "202001:202006")
+#' 
 #' @return objeto \code{ts} contendo serie temporal da regiao especificada na janela especificada
 #' 
 #' @export
@@ -40,7 +46,7 @@ extraiserie <- function(dado, lon, lat, data, FUN = mean, ...) {
     if(missing("data")) {
         data <- dado[, range(DATE)]
     } else {
-        data <- as.Date(paste0(data, "01"), format = "%Y%m%d")
+        data <- range(dateparse(data))
     }
 
     if(length(lat) == 1) lat <- rep(lat, 2)

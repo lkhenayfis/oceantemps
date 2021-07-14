@@ -7,39 +7,38 @@
 #' @param dado o dado do qual extrair serie. Deve ter formato igual ao retornado por 
 #'     \code{\link{leFROMdir}} ou \code{\link{leFROMurl}}
 #' @param data escalar string no formato AAAAMM indicando o ano-mes que deve ser plotado
-#' @param outfile opcional, indicando um caminho de arquivo para escrita. Ver Exemplos
+#' @param outdir opcional, indicando diretorio para escrita dos graficos. Ver Exemplos
 #' 
 #' @examples 
 #' 
 #' # plot do ano-mes 202001
-#' plotamapa(datexemplo, "202001")
+#' plots <- plotamapa(datexemplo, "202001")
+#' 
+#' # janela 202001:202003
+#' plots <- plotamapa(datexemplo, "202001:202003")
 #' 
 #' \dontrun{
 #' # escrita do arquivo em um diretorio qualquer
 #' plotamapa(datexemplo, "202001", "C:/Users/usuario_qualquer/Imagens/plot.png")
 #' }
 #' 
-#' @return objeto ggplot contendo grafico criado ou vazio no caso de \code{outfile} fornecido
+#' @return Caso nao seja fornecido \code{outdir}, retorna objetos ggplot numa lista ou escalar caso
+#'     apenas uma data tenha sido fornecida. Caso \code{outdir} seja fornecido, escreve os plots no
+#'     diretorio com nomes "mapa_AAAA-MM.png"
 #' 
 #' @import ggplot2
 #' 
 #' @export
 
-plotamapa <- function(dado, data, outfile) {
+plotamapa <- function(dado, data, outdir) {
 
     if(missing("data")) {
         data <- dado$DATE[1]
     } else {
-        data <- as.Date(paste0(data, "01"), format = "%Y%m%d")
+        data <- dateparse(data)
     }
 
-    if(length(data) > 1) {
-        data <- data[1]
-        warning("Foi fornecido um vetor no parametro 'data' -- apenas o primeiro elemento sera usado")
-    }
-
-    dplot <- dado[DATE == data]
-    dplot[, DATE := factor(format(DATE, format = "%Y-%b"))]
+    dplot <- dado[DATE %in% data]
 
     # O raster assume que cada par LON, LAT e um centro do retangulo a ser desenhado. Isso cria uma
     # ilusao de offset entre os mapas e raster, porque o primeiro quadrado em LON = 0 fica esticado
@@ -57,17 +56,27 @@ plotamapa <- function(dado, data, outfile) {
 
     mapa <- map_data("world", wrap = c(0, 360))
 
-    g <- ggplot(dplot, aes(LON, LAT, fill = SST)) + geom_raster() +
-        geom_polygon(data = mapa, aes(long, lat, group = group), fill = "gray50", color = "grey20") +
-        scale_fill_gradient2(low = "blue", mid = "yellow", high = "red",
-            midpoint = datexemplo[, mean(SST, na.rm = TRUE)], na.value = "grey50") +
-        labs(title = paste0("Data: ", dplot$DATE[1]), x = "", y = "") +
-        theme_minimal() +
-        coord_cartesian(xlim = range(mapa$long), ylim = c(min(mapa$lat), max(dplot$LAT)), expand = FALSE)
+    limsst <- dplot[, range(SST, na.rm = TRUE)]
+    midsst <- dplot[, mean(SST, na.rm = TRUE)]
 
-    if(missing("outfile")) {
-        return(g)
+    gs <- lapply(data, function(di) {
+        ggplot(dplot[DATE == di], aes(LON, LAT, fill = SST)) + geom_raster() +
+            geom_polygon(data = mapa, aes(long, lat, group = group), fill = "gray50", color = "grey20") +
+            scale_fill_gradient2(low = "blue", mid = "yellow", high = "red", limits = limsst,
+                midpoint = midsst, na.value = "grey50") +
+            labs(title = paste0("Data: ", di), x = "", y = "") +
+            theme_minimal() +
+            coord_cartesian(xlim = range(mapa$long), ylim = c(min(mapa$lat), max(dplot$LAT)), expand = FALSE)
+    })
+
+    if(missing("outdir")) {
+        for(g in gs) {dev.new(); print(g)}
+        if(length(gs) == 1) invisible(gs[[1]]) else invisible(gs)
     } else {
-        ggsave(outfile, g, width = 9, height = 6)
+        for(i in seq_along(data)) {
+            di <- format(data[i], format = "%Y-%m")
+            g <- gs[[i]]
+            ggsave(file.path(outdir, paste0("mapa_", di, ".png")), g, width = 9, height = 6)
+        }
     }
 }

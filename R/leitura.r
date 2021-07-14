@@ -7,7 +7,8 @@
 #' @param dir diretorio onde se encontram os arquivos .nc no formato ersst.v5.AAAAMM.nc, onde 
 #'     \emph{AAAA} indica o ano e \emph{MM} o mes referente as informacoes
 #' @param data string no formato AAAAMM indicando ano-mes do dado a ser baixado. Pode ser um 
-#'     vetor de dois elementos indicando a janela de tempo dos dados que devem ser baixados
+#'     vetor de um ou mais elementos, indicando as datas, ou uma string no formato "AAAAMM:AAAAMM"
+#'     indicando uma faixa de datas
 #' @param url url de onde baixar os dados. Se nao forncida, sera usado
 #'     \url{https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/netcdf/}
 #' @param outdir opcional; diretorio onde salvar os arquivos baixados. Caso nao seja fornecido, os
@@ -82,8 +83,7 @@ leFROMurl <- function(data, url, outdir) {
     if(missing("url")) url <- "https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/netcdf/"
     if(missing("outdir")) outdir <- tempdir()
 
-    data <- as.Date(paste0(data, "01"), format = "%Y%m%d")
-    if(length(data) > 1) data <- seq(data[1], data[2], by = "month") else data <- data
+    data <- dateparse(data)
     data <- format(data, format = "%Y%m")
 
     arqs <- paste0("ersst.v5.", data, ".nc")
