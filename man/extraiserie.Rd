@@ -4,7 +4,7 @@
 \alias{extraiserie}
 \title{Extracao do regioes do dado completo}
 \usage{
-extraiserie(dado, lon, lat, data, FUN = mean, ...)
+extraiserie(dado, lon, lat, data, FUN = mean, plot = TRUE, ...)
 }
 \arguments{
 \item{dado}{o dado do qual extrair serie. Deve ter formato igual ao retornado por
@@ -18,6 +18,8 @@ extraiserie(dado, lon, lat, data, FUN = mean, ...)
 
 \item{FUN}{funcao utilizada para agregacao de observacoes por data no caso de \code{lon} ou
 \code{lat} serem vetores. Por padrao se usa a media}
+
+\item{plot}{booleano indicando se deve ser plotado um mapa apontando a regiao extraida.}
 
 \item{...}{parametros extras passados a \code{FUN}. \bold{Nao deve ser passado na.rm por aqui,
 pois e incorporado automaticamente}}

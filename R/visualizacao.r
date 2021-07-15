@@ -60,7 +60,7 @@ plotamapa <- function(dado, data, outdir) {
     midsst <- dplot[, mean(SST, na.rm = TRUE)]
 
     gs <- lapply(data, function(di) {
-        ggplot(dplot[DATE == di], aes(LON, LAT, fill = SST)) + geom_raster() +
+        ggplot() + geom_raster(data = dplot[DATE == di], aes(LON, LAT, fill = SST)) +
             geom_polygon(data = mapa, aes(long, lat, group = group), fill = "gray50", color = "grey20") +
             scale_fill_gradient2(low = "blue", mid = "yellow", high = "red", limits = limsst,
                 midpoint = midsst, na.value = "grey50") +

@@ -19,6 +19,7 @@
 #' @param data data das observacoes desejadas no formato AAAAMM. Ver Detalhes
 #' @param FUN funcao utilizada para agregacao de observacoes por data no caso de \code{lon} ou 
 #'     \code{lat} serem vetores. Por padrao se usa a media
+#' @param plot booleano indicando se deve ser plotado um mapa apontando a regiao extraida.
 #' @param ... parametros extras passados a \code{FUN}. \bold{Nao deve ser passado na.rm por aqui,
 #'     pois e incorporado automaticamente}
 #' 
@@ -39,7 +40,7 @@
 #' 
 #' @export
 
-extraiserie <- function(dado, lon, lat, data, FUN = mean, ...) {
+extraiserie <- function(dado, lon, lat, data, FUN = mean, plot = TRUE, ...) {
 
     if(missing("lat")) lat <- dado[, range(LAT)]
     if(missing("lon")) lon <- dado[, range(LON)]
@@ -62,6 +63,16 @@ extraiserie <- function(dado, lon, lat, data, FUN = mean, ...) {
     out <- dado[(LAT %between% lat) & (LON %between% lon) & (DATE %between% data),
         .("SST" = FUN(SST, na.rm = TRUE, ...)), by = DATE]
     out <- ts(out$SST, start = c(year(data[1]), month(data[1])), freq = 12)
+
+    reg <- data.frame(xmin = lon[1], xmax = lon[2], ymin = lat[1], ymax = lat[2])
+
+    if(plot) {
+        g <- plotamapa(dado)
+        g <- g + geom_rect(data = reg, aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
+                    fill = NA, color = "#000000", lwd = 1.1)
+
+        print(g)
+    }
 
     return(out)
 }
