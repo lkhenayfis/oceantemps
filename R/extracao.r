@@ -53,6 +53,10 @@ extraiserie <- function(dado, lon, lat, data, FUN = mean, ...) {
     if(length(lon) == 1) lon <- rep(lon, 2)
     if(length(data) == 1) data <- rep(data, 2)
 
+    lat <- sort(lat)
+    lon <- sort(lon)
+    data <- sort(data)
+
     if(is.character(FUN)) FUN <- eval(parse(text = FUN))
 
     out <- dado[(LAT %between% lat) & (LON %between% lon) & (DATE %between% data),
