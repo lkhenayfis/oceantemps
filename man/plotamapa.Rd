@@ -4,7 +4,7 @@
 \alias{plotamapa}
 \title{Plot da temperatura na superficie}
 \usage{
-plotamapa(dado, data, outdir)
+plotamapa(dado, data, wrap = c(0, 360), outdir)
 }
 \arguments{
 \item{dado}{o dado do qual extrair serie. Deve ter formato igual ao retornado por
@@ -13,6 +13,8 @@ plotamapa(dado, data, outdir)
 \item{data}{escalar string no formato AAAAMM indicando o ano-mes que deve ser plotado}
 
 \item{outdir}{opcional, indicando diretorio para escrita dos graficos. Ver Exemplos}
+
+\item{warp}{\emph{EXPERIMENTAL} vetor indicando os limites do mapa. Ver Detalhes}
 }
 \value{
 Caso nao seja fornecido \code{outdir}, retorna objetos ggplot numa lista ou escalar caso
@@ -22,6 +24,13 @@ diretorio com nomes "mapa_AAAA-MM.png"
 \description{
 Funcao facilitadora para visualizacao do dado de temperatura na superficie
 }
+\details{
+O parametro \code{wrap} permite plotar diferentes centralizacoes do mapa mundi. Supondo que
+observamos o globo de cima, a primeira posivao do vetor \code{wrap} indica o grau inicial do mapa
+e, a segunda, o final. O padrao de \code{wrap = c(0, 360)} corresponde ao plot centrado no oceano
+pacifico, enquanto \code{wrap = c(-180, 180)} corresponde a centralizacao no atlantico. Veja os
+exemplos.
+}
 \examples{
 
 # plot do ano-mes 202001
@@ -29,6 +38,9 @@ plots <- plotamapa(datexemplo, "202001")
 
 # janela 202001:202003
 plots <- plotamapa(datexemplo, "202001:202003")
+
+# plot centralizado no atlantico
+plotamapa(datexemplo, "202001", wrap = c(-180, 180))
 
 \dontrun{
 # escrita do arquivo em um diretorio qualquer
