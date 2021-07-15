@@ -4,7 +4,7 @@
 \alias{plotamapa}
 \title{Plot da temperatura na superficie}
 \usage{
-plotamapa(dado, data, outfile)
+plotamapa(dado, data, outdir)
 }
 \arguments{
 \item{dado}{o dado do qual extrair serie. Deve ter formato igual ao retornado por
@@ -12,10 +12,12 @@ plotamapa(dado, data, outfile)
 
 \item{data}{escalar string no formato AAAAMM indicando o ano-mes que deve ser plotado}
 
-\item{outfile}{opcional, indicando um caminho de arquivo para escrita. Ver Exemplos}
+\item{outdir}{opcional, indicando diretorio para escrita dos graficos. Ver Exemplos}
 }
 \value{
-objeto ggplot contendo grafico criado ou vazio no caso de \code{outfile} fornecido
+Caso nao seja fornecido \code{outdir}, retorna objetos ggplot numa lista ou escalar caso
+apenas uma data tenha sido fornecida. Caso \code{outdir} seja fornecido, escreve os plots no
+diretorio com nomes "mapa_AAAA-MM.png"
 }
 \description{
 Funcao facilitadora para visualizacao do dado de temperatura na superficie
@@ -23,7 +25,10 @@ Funcao facilitadora para visualizacao do dado de temperatura na superficie
 \examples{
 
 # plot do ano-mes 202001
-plotamapa(datexemplo, "202001")
+plots <- plotamapa(datexemplo, "202001")
+
+# janela 202001:202003
+plots <- plotamapa(datexemplo, "202001:202003")
 
 \dontrun{
 # escrita do arquivo em um diretorio qualquer

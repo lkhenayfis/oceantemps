@@ -14,7 +14,7 @@ extraiserie(dado, lon, lat, data, FUN = mean, ...)
 
 \item{lat}{latitude da regiao desejada. Ver Detalhes}
 
-\item{data}{data das observacoes desejada no formato AAAAMM. Ver Detalhes}
+\item{data}{data das observacoes desejadas no formato AAAAMM. Ver Detalhes}
 
 \item{FUN}{funcao utilizada para agregacao de observacoes por data no caso de \code{lon} ou
 \code{lat} serem vetores. Por padrao se usa a media}
@@ -29,10 +29,13 @@ objeto \code{ts} contendo serie temporal da regiao especificada na janela especi
 Permite extrair de dado de temperaturas da superficie uma determinada regiao numa janela de tempo
 }
 \details{
-Todos os tres parametros \code{lon}, \code{lat} e \code{data} podem ser fornecidos como um
-escalar ou vetor. No primeiro caso sera feito matching exato do valor fornecido; no segundo,
-quando sao informados vetores, sera buscado no dado registros entre o primeiro e segundo valores
-do vetor com intervalos fechados.
+Os parametros \code{lon} e \code{lat}podem ser fornecidos como um escalar ou vetor. No primeiro
+caso sera feito matching exato do valor fornecido; no segundo, quando sao informados vetores,
+sera buscado no dado registros entre o primeiro e ultimo valores do vetor, inclusive.
+
+No caso das datas, algo similar pode ser feito fornecendo uma string no formato "AAAAMM:AAAAMM",
+indicando a janela de tempo desejada. Nao e permitida a extracao de datas nao sequenciais, dado
+que assim ja nao configura mais uma serie temporal.
 }
 \examples{
 
@@ -43,5 +46,8 @@ extraiserie(datexemplo, lon = 38, lat = -44)
 
 # Extracao da faixa lon = [38, 40], lat = [-44, -40] ao longo de 2020, combinando por media (padrao)
 extraiserie(datexemplo, c(38, 40), c(-44, -40))
+
+# Mesma regiao mas apenas na janela 202001:202006
+extraiserie(datexemplo, c(38, 40), c(-44, -40), "202001:202006")
 
 }

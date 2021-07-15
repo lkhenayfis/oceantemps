@@ -15,7 +15,8 @@ leFROMurl(data, url, outdir)
 \emph{AAAA} indica o ano e \emph{MM} o mes referente as informacoes}
 
 \item{data}{string no formato AAAAMM indicando ano-mes do dado a ser baixado. Pode ser um
-vetor de dois elementos indicando a janela de tempo dos dados que devem ser baixados}
+vetor de um ou mais elementos, indicando as datas, ou uma string no formato "AAAAMM:AAAAMM"
+indicando uma faixa de datas}
 
 \item{url}{url de onde baixar os dados. Se nao forncida, sera usado
 \url{https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/netcdf/}}
@@ -50,7 +51,10 @@ leFROMdir(diretorio)
 
 # LEITURA DA MESMA JANELA DE DADOS A PARTIR DA URL PADRAO -------------
 
-leFROMurl(janela = c("202001", "202002"))
+leFROMurl(data = "202001:202002")
+
+# leitura de datas nao sequenciais
+leFROMurl(data = c("202001", "202005", "202011"))
 
 }
 \seealso{
