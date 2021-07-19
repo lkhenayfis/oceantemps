@@ -8,6 +8,14 @@
 #' caso sera feito matching exato do valor fornecido; no segundo, quando sao informados vetores,
 #' sera buscado no dado registros entre o primeiro e ultimo valores do vetor, inclusive.
 #' 
+#' Ainda com relacao aos vetores de coordenadas, e tambem possivel fornecer \code{lon} em duas 
+#' referencias distintas: na escala de 0 a 360 graus ou -180 a 180. O segundo caso e mais 
+#' conveniente quando se estao extraindo series no atlantico, cujas coordenadas no sistema 0, 360 
+#' acabam sendo quebradas nas duas pontas do mapa. Caso algum valor de \code{lon} seja negativo, o 
+#' codigo automaticamente entedera a mudanca de paradigma. \bold{Nao sao suportados ainda valores
+#' de \code{lon} 'circulares", isto e, que implicariam o contorno ao redor do globo (ex. 
+#' \code{lon = c(350, 370)} -- para isso, use \code{lon = c(-10, 10)})}. Ver Exemplos
+#' 
 #' No caso das datas, algo similar pode ser feito fornecendo uma string no formato "AAAAMM:AAAAMM", 
 #' indicando a janela de tempo desejada. Nao e permitida a extracao de datas nao sequenciais, dado 
 #' que assim ja nao configura mais uma serie temporal.
@@ -36,6 +44,12 @@
 #' # Mesma regiao mas apenas na janela 202001:202006
 #' extraiserie(datexemplo, c(38, 40), c(-44, -40), "202001:202006")
 #' 
+#' # Extraindo series no atlantico, usando escala [-180, 180]
+#' extraiserie(datexemplo, c(-15, -10), c(-10, 0))
+#' 
+#' # Equivalente ao anterior na referencia [0, 360]
+#' extraiserie(datexemplo, c(345, 350), c(-10, 0))
+#' 
 #' @return objeto \code{ts} contendo serie temporal da regiao especificada na janela especificada
 #' 
 #' @export
@@ -58,6 +72,14 @@ extraiserie <- function(dado, lon, lat, data, FUN = mean, plot = TRUE, ...) {
     lon <- sort(lon)
     data <- sort(data)
 
+    # caso haja valores nagativos em lon, processa o dado para wrap adequado
+    if(any(sign(lon) == -1)) {
+        wrap <- c(-180, 180)
+        dado <- aplicawrap(dado, wrap)
+    } else {
+        wrap <- c(0, 360)
+    }
+
     if(is.character(FUN)) FUN <- eval(parse(text = FUN))
 
     out <- dado[(LAT %between% lat) & (LON %between% lon) & (DATE %between% data),
@@ -67,7 +89,7 @@ extraiserie <- function(dado, lon, lat, data, FUN = mean, plot = TRUE, ...) {
     reg <- data.frame(xmin = lon[1], xmax = lon[2], ymin = lat[1], ymax = lat[2])
 
     if(plot) {
-        g <- plotamapa(dado)
+        g <- plotamapa(dado, wrap = wrap)
         g <- g + geom_rect(data = reg, aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
                     fill = NA, color = "#000000", lwd = 1.1)
 
