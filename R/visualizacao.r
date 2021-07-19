@@ -54,10 +54,7 @@ plotamapa <- function(dado, data, wrap = c(0, 360), outdir) {
     dplot <- dado[DATE %in% data]
     mapa  <- map_data("world", wrap = wrap)
 
-    lon0 <- dplot$LON
-    dplot[lon0 < min(wrap), LON := LON + 360]
-    dplot[lon0 > max(wrap), LON := LON - 360]
-    setorder(dplot, LON)
+    dplot <- aplicawrap(dplot, wrap)
 
     # O raster assume que cada par LON, LAT e um centro do retangulo a ser desenhado. Isso cria uma
     # ilusao de offset entre os mapas e raster, porque o primeiro quadrado em LON = 0 fica esticado
