@@ -20,3 +20,16 @@ dateparse <- function(string) {
 
     return(datas)
 }
+
+#' Processador de wrap do dado de temperatura
+
+aplicawrap <- function(dado, wrap) {
+
+    dado <- copy(dado)
+    lon0 <- dado$LON
+    dado[lon0 < min(wrap), LON := LON + 360]
+    dado[lon0 > max(wrap), LON := LON - 360]
+    setorder(dado, LON)
+
+    return(dado)
+}
