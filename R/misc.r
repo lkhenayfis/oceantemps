@@ -1,6 +1,6 @@
 ########################### FUNCOES MISC PARA AUXILIO DO PACOTE EM GERAL ###########################
 
-#' Funcao para tratar input de datas nas funcoes de leitura, extracao e plot
+# Funcao para tratar input de datas nas funcoes de leitura, extracao e plot
 
 dateparse <- function(string) {
 
@@ -21,7 +21,7 @@ dateparse <- function(string) {
     return(datas)
 }
 
-#' Processador de wrap do dado de temperatura
+# Processador de wrap do dado de temperatura
 
 aplicawrap <- function(dado, wrap) {
 
